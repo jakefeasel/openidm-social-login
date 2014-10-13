@@ -16,7 +16,10 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
   config.vm.define "idm", primary: true do |idm|
     idm.vm.provision :shell, :path => "vagrant_scripts/idm_bootstrap.sh"
     idm.vm.network "private_network", ip: "192.168.50.3"
-    idm.vm.network "forwarded_port", guest: 8443, host: 8443
+    idm.vm.network "forwarded_port", guest: 8443, host: 8443 #IDM HTTPS
+    idm.vm.network "forwarded_port", guest: 1389, host: 1389 #DJ ldap
+    idm.vm.network "forwarded_port", guest: 1689, host: 1689 #DJ jmx
+    idm.vm.network "forwarded_port", guest: 4444, host: 4444 #DJ admin
     idm.vm.box = "hashicorp/precise32"
   end
 

@@ -1,0 +1,59 @@
+{
+    "serverAuthContext" : {
+        "sessionModule" : {
+            "name" : "JWT_SESSION",
+            "properties" : {
+                "keyAlias" : "openidm-localhost",
+                "privateKeyPassword" : "&{openidm.keystore.password}",
+                "keystoreType" : "&{openidm.keystore.type}",
+                "keystoreFile" : "&{openidm.keystore.location}",
+                "keystorePassword" : "&{openidm.keystore.password}",
+                "maxTokenLifeMinutes" : "35791",
+                "tokenIdleTimeMinutes" : "35791",
+                "sessionOnly" : false
+            }
+        },
+        "authModules" : [
+            {
+                "name" : "OPENID_CONNECT",
+                "properties" : {
+                    "openIdConnectHeader" : "oidc_id_token",
+                    "queryOnResource" : "managed/user",
+                    "propertyMapping" : {
+                        "authenticationId" : "subject"
+                    },
+                    "resolvers" : [
+                        {
+                            "name" : "Google",
+                            "icon" : "https://developers.google.com/accounts/images/sign-in-with-google.png",
+                            "client_id" : "#your_client_id",
+                            "client_secret" : "#your_client_secret",
+                            "authorization_endpoint" : "https://accounts.google.com/o/oauth2/auth",
+                            "token_endpoint" : "https://accounts.google.com/o/oauth2/token",
+                            "userinfo_endpoint" : "https://www.googleapis.com/plus/v1/people/me/openIdConnect",
+                            "well-known" : "https://accounts.google.com/.well-known/openid-configuration"
+                        }
+                    ],
+                    "defaultUserRoles" : [
+                        "openidm-authorized"
+                    ]
+                },
+                "enabled" : true
+            },
+            {
+                "name" : "INTERNAL_USER",
+                "properties" : {
+                    "queryId" : "credential-internaluser-query",
+                    "queryOnResource" : "repo/internal/user",
+                    "propertyMapping" : {
+                        "authenticationId" : "username",
+                        "userCredential" : "password",
+                        "userRoles" : "roles"
+                    },
+                    "defaultUserRoles" : [ ]
+                },
+                "enabled" : true
+            }
+        ]
+    }
+}

@@ -1,3 +1,10 @@
+OpenIDM Sample for Social Login with OpenID Connect
+===================================================
+
+This is a sample project demonstrating the use of OpenID Connect within OpenIDM. It was created using the OpenIDM Custom Project Boilerplate found at https://github.com/jakefeasel/openidm-boilerplate.
+
+
+
 OpenIDM Custom Project Boilerplate
 ==================================
 

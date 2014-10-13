@@ -34,3 +34,17 @@ npm install
 cd target/openidm_project/bin
 ./create-openidm-rc.sh
 cp openidm /etc/init.d
+
+
+
+### Adding in OpenDJ
+
+cd /tmp
+svn checkout https://svn.forgerock.org/opendj/tags/2.6.0 opendj
+cd opendj
+./build.sh
+cp build/package/OpenDJ-2.6.0.zip ~
+cd ~
+unzip OpenDJ-2.6.0.zip
+opendj/setup --cli --propertiesFilePath /vagrant/vagrant_scripts/opendj.properties --acceptLicense --no-prompt --doNotStart
+

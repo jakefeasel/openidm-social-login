@@ -49,7 +49,13 @@ var httpAccessConfig =
 { 
     "configs" : [
         // Anyone can read from these endpoints
-        {  
+        {
+           "pattern"    : "endpoint/oidc",
+           "roles"      : "*",
+           "methods"    : "action,read",
+           "actions"    : "getToken"
+        },
+        {
            "pattern"    : "info/*",
            "roles"      : "*",
            "methods"    : "read",
