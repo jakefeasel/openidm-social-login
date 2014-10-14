@@ -44,7 +44,7 @@
 
             "query-all-ids" : "SELECT objectid FROM ${_dbSchema}.${_table}",
             "for-internalcredentials" : "select * FROM ${_dbSchema}.${_table} WHERE objectid = ${uid}",
-            "get-notifications-for-user" : "select * FROM ${_dbSchema}.${_table} WHERE receiverId = ${userId} order by createDate desc",        
+            "get-notifications-for-user" : "select * FROM ${_dbSchema}.${_table} WHERE receiverId = ${userId} order by createDate desc",
             
             "credential-query" : "SELECT * FROM ${_dbSchema}.${_table} WHERE objectid = ${username}",
             "credential-internaluser-query" : "SELECT objectid, pwd, roles FROM ${_dbSchema}.${_table} WHERE objectid = ${username}",
@@ -101,6 +101,11 @@
             "cluster" : {
                 "mainTable" : "clusterobjects",
                 "propertiesTable" : "clusterobjectproperties",
+                "searchableDefault" : false
+            },
+            "config" : {
+                "mainTable" : "configobjects",
+                "propertiesTable" : "configobjectproperties",
                 "searchableDefault" : false
             }
         },
