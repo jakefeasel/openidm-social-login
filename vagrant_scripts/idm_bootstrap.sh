@@ -3,9 +3,7 @@
 export OPENIDM_OPTS="-Xms128m -Xmx256m"
 
 echo "192.168.50.4 OPENIDM_REPO_HOST" >> /etc/hosts
-echo "192.168.50.4 SQLFIDDLE_HOST" >> /etc/hosts
-echo "192.168.50.4 POSTGRESQL93_HOST" >> /etc/hosts
-echo "192.168.50.5 MYSQL56_HOST" >> /etc/hosts
+echo "192.168.50.5 DJ_HOST" >> /etc/hosts
 
 echo "export OPENIDM_OPTS=\"${OPENIDM_OPTS}\"" >> /etc/profile
 
@@ -38,17 +36,3 @@ npm install
 cd target/openidm_project/bin
 ./create-openidm-rc.sh
 cp openidm /etc/init.d
-
-
-
-### Adding in OpenDJ
-
-cd /tmp
-svn checkout https://svn.forgerock.org/opendj/tags/2.6.0 opendj
-cd opendj
-./build.sh
-cp build/package/OpenDJ-2.6.0.zip ~
-cd ~
-unzip OpenDJ-2.6.0.zip
-opendj/setup --cli --propertiesFilePath /vagrant/vagrant_scripts/opendj.properties --acceptLicense --no-prompt --doNotStart
-
