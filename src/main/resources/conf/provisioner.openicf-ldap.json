@@ -1,7 +1,7 @@
 {
     "name" : "ldap",
     "configurationProperties" : {
-        "host" : "localhost",
+        "host" : "DJ_HOST",
         "port" : 1389,
         "ssl" : false,
         "principal" : "cn=Directory Manager",
