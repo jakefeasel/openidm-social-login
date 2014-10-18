@@ -35,35 +35,28 @@
                         return r.name === name;
                     }),
                     response,
+                    userInfoResponse,
                     claims,
-                    user;
+                    userQry;
 
                 if (!resolver) {
                     throw { "code": 400, "message": "Unable to find provider with name '" + name + "'"};
                 }
 
-                try {
-                    response = openidm.action("external/rest", "call", {
-                        "method": "POST",
-                        "url": resolver.token_endpoint,
-                        "contentType": "application/x-www-form-urlencoded",
-                        "body": this.serializeParams({
-                            "grant_type": "authorization_code",
-                            "redirect_uri": redirect_uri,
-                            "code": code,
-                            "client_id": resolver.client_id,
-                            "client_secret": resolver.client_secret
-                        })
-                    });
-                } catch (e) {
-                    throw {
-                        "code" : e.javaException.getCode(), 
-                        "message" : e.javaException.getMessage(),
-                        "detail" : e.javaException.getDetail()
-                    };
-                }
+                response = openidm.action("external/rest", "call", {
+                    "method": "POST",
+                    "url": resolver.token_endpoint,
+                    "contentType": "application/x-www-form-urlencoded",
+                    "body": this.serializeParams({
+                        "grant_type": "authorization_code",
+                        "redirect_uri": redirect_uri,
+                        "code": code,
+                        "client_id": resolver.client_id,
+                        "client_secret": resolver.client_secret
+                    })
+                });
 
-                if (!response || !response.id_token) {
+                if (!response || !response.id_token || !response.access_token) {
                     throw { "code": 400, "message": "Incorrect response from server", "detail": response };
                 }
 
@@ -77,18 +70,37 @@
 
                 claims = JSON.parse( new java.lang.String(base64.decode( response.id_token.split(".")[1]) ) );
 
-                console.log(JSON.stringify(claims, null, 4))
+                userInfoResponse = openidm.action("external/rest", "call", {
+                    "method": "GET",
+                    "url": resolver.userinfo_endpoint,
+                    "authenticate": {
+                        "type": "bearer",
+                        "token": response.access_token
+                    }
+                });
 
-                /*user = openidm.read("managed/user/" + claims.iss + ":" + claims.sub);
+                userQry = openidm.query("managed/user", {"_queryFilter": '/subject eq "'+ claims.sub +'"'});
 
                 // if the user isn't found in our local user cache, create a record for them
-                if (user === null) {
-                    openidm.create("managed/user", claims.iss + ":" + claims.sub, {
+                if (userQry.result.length === 0) {
+
+                    openidm.create("managed/user", null, {
                         "issuer" : claims.iss,
                         "subject" : claims.sub,
-                        "email" : claims.email
+
+                        "givenName" : userInfoResponse.given_name,
+                        "sn" : userInfoResponse.family_name,
+                        "displayName" : userInfoResponse.name,
+                        // get the first part of their email address for the username
+                        "userName" : userInfoResponse.email.replace(/@.*/, ''),
+                        "mail" : userInfoResponse.email,
+                        "profile" : userInfoResponse.profile,
+                        "picture" : userInfoResponse.picture,
+                        "gender" : userInfoResponse.gender,
+                        "locale" : userInfoResponse.locale
                     });
-                }*/
+
+                }
 
                 return {
                     "token": response.id_token,
