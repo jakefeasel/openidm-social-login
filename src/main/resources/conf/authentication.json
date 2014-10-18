@@ -34,7 +34,8 @@
                     "openIdConnectHeader" : "oidc_id_token",
                     "queryOnResource" : "managed/user",
                     "propertyMapping" : {
-                        "authenticationId" : "subject"
+                        "authenticationId" : "subject",
+                        "userRoles" : "roles"
                     },
                     "resolvers" : [
                         {
