@@ -70,19 +70,19 @@
 
                 claims = JSON.parse( new java.lang.String(base64.decode( response.id_token.split(".")[1]) ) );
 
-                userInfoResponse = openidm.action("external/rest", "call", {
-                    "method": "GET",
-                    "url": resolver.userinfo_endpoint,
-                    "authenticate": {
-                        "type": "bearer",
-                        "token": response.access_token
-                    }
-                });
-
                 userQry = openidm.query("managed/user", {"_queryFilter": '/subject eq "'+ claims.sub +'"'});
 
                 // if the user isn't found in our local user cache, create a record for them
                 if (userQry.result.length === 0) {
+
+                    userInfoResponse = openidm.action("external/rest", "call", {
+                        "method": "GET",
+                        "url": resolver.userinfo_endpoint,
+                        "authenticate": {
+                            "type": "bearer",
+                            "token": response.access_token
+                        }
+                    });
 
                     openidm.create("managed/user", null, {
                         "issuer" : claims.iss,
