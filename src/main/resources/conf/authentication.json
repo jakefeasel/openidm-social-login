@@ -15,6 +15,20 @@
         },
         "authModules" : [
             {
+                "name" : "INTERNAL_USER",
+                "properties" : {
+                    "queryId" : "credential-internaluser-query",
+                    "queryOnResource" : "repo/internal/user",
+                    "propertyMapping" : {
+                        "authenticationId" : "username",
+                        "userCredential" : "password",
+                        "userRoles" : "roles"
+                    },
+                    "defaultUserRoles" : [ ]
+                },
+                "enabled" : true
+            },
+            {
                 "name" : "OPENID_CONNECT",
                 "properties" : {
                     "openIdConnectHeader" : "oidc_id_token",
@@ -37,20 +51,6 @@
                     "defaultUserRoles" : [
                         "openidm-authorized"
                     ]
-                },
-                "enabled" : true
-            },
-            {
-                "name" : "INTERNAL_USER",
-                "properties" : {
-                    "queryId" : "credential-internaluser-query",
-                    "queryOnResource" : "repo/internal/user",
-                    "propertyMapping" : {
-                        "authenticationId" : "username",
-                        "userCredential" : "password",
-                        "userRoles" : "roles"
-                    },
-                    "defaultUserRoles" : [ ]
                 },
                 "enabled" : true
             }
