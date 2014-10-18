@@ -1,66 +1,68 @@
 OpenIDM Sample for Social Login with OpenID Connect
 ===================================================
 
-This is a sample project demonstrating the use of OpenID Connect within OpenIDM. It was created using the OpenIDM Custom Project Boilerplate found at https://github.com/jakefeasel/openidm-boilerplate.
+This is a sample project demonstrating the use of OpenID Connect within OpenIDM. It presents a single visible enhancment to the default OpenIDM project - a new button on the /openidmui login page that allows the user to login with Google in addition to the more traditional username and password. Once logged in, the user will be automatically created in the local managed/user table; a matching record will then be created (via the normal sync process) in an LDAP server.
 
+This project will start up three small virtual machines - one for PostgreSQL 9.3, one for OpenDJ 2.6.0, and one for OpenIDM 3.1 (which will be modified to include these customizations). 
 
-
-OpenIDM Custom Project Boilerplate
-==================================
-
-##Goals - What is this all about?
-
-[ForgeRock OpenIDM](http://openidm.forgerock.org/) is a powerful and flexible platform for building a provisioning solution. As a platform, it is expected that customizations are going to be needed for any particular project implementation. These customizations come in a number of forms, including (but not limited to):
-
-* detailed project configuration
-* custom scripts for extensible behavior (either Groovy or JavaScript)
-* custom Activiti workflows (implemented with XML)
-* project-specific dependencies such as database drivers or libraries for connectors
-* user interface changes
-
-Making these customizations is the job of an OpenIDM "Integrator". Normally, Integrators learn about making these changes by reading the [OpenIDM Integrator's Guide](http://openidm.forgerock.org/doc/integrators-guide/index.html). This project boilerplate aims to assist the Integrator by providing a reusable structure to manage the full lifecycle of development for these customizations. 
-
-With this project boilerplate, the Integrator can treat these project customizations like any other source code - tracked in a working copy, able to be shared with their fellow Integrators for collaboration, tested by a QA department (or a customer), and eventually deployed to production. With this boilerplate it is expected that Integrators will find OpenIDM projects much simpler to create, develop and distribute.
+This project was created using the [OpenIDM Custom Project Boilerplate](https://github.com/jakefeasel/openidm-boilerplate).
 
 ##Requirements
 
-The only fixed requirement necessary to use this boilerplate is [Vagrant](http://www.vagrantup.com/). By default, Vagrant is configured to use [VirtualBox](https://www.virtualbox.org/) as the virtual machine provider; unless you really want to use a different provider, you should have that installed as well (check the [Vagrant Docs](http://docs.vagrantup.com/v2/providers/index.html) for more details on using others).
+To use this sample, you will need [Vagrant](http://www.vagrantup.com/) and [VirtualBox](https://www.virtualbox.org/) installed locally. You also must have a [Google Project](https://console.developers.google.com/project) created to use with this sample, setup to use OAuth.
 
-To get the most value out of this boilerplate, you should check it into a source code manager such as git or subversion. This way you can track your project customizations just like you would track any other development project. Git will probably work the best, as I have already prepped the .gitignore as you would need.
+Here are the instructions for setting up a new Project for use in this sample:
 
-You will probably also need some kind of IDE (Eclipse, Sublime Text, etc...) for development.
+1. Login here with your Google credentials: [https://console.developers.google.com/project](https://console.developers.google.com/project)
+2. Click 'Create Project'; when prompted, enter a name (openidm-social-login isn't a bad idea)
+3. After a moment, the above process will complete and you will see your new project listed under 'Projects'. Click on the name.
+4. Expand the 'APIs & auth' menu and click on 'Credentials'
+5. Under 'OAuth', click 'Create new Client ID'
 
-##Getting started
+6. Submit the details for the new client:
 
-Download (or fork & clone) this project into your local environment. Add it to your source control as needed. Once you have the above requirements installed, just run one command:
+    'Application Type' = 'Web application'
+
+    'Authorized JavaScript Origins' = https://localhost:18443
+
+    'Authorized Redirect URI' = https://localhost:18443/openidmui/oauth.html
+
+7. Copy the values shown for "Client ID" and "Client Secret" into src/main/resources/conf/authentication.json, within this block (obviously replacing #your_client_id with the actual value, and same for client_secret):
+
+                        {
+                            "name" : "Google",
+                            "icon" : "https://developers.google.com/accounts/images/sign-in-with-google.png",
+                            "client_id" : "#your_client_id",
+                            "client_secret" : "#your_client_secret",
+                            "authorization_endpoint" : "https://accounts.google.com/o/oauth2/auth",
+                            "token_endpoint" : "https://accounts.google.com/o/oauth2/token",
+                            "userinfo_endpoint" : "https://www.googleapis.com/plus/v1/people/me/openIdConnect",
+                            "well-known" : "https://accounts.google.com/.well-known/openid-configuration"
+                        }
+
+8. Go back to the Google console and click on the "Consent screen" menu option
+9. Enter your email address and a product name ("OpenIDM Social Login Demo" isn't a bad choice). You could also fill in the optional fields, if you want. Click 'Save' when finished.
+10. Click on the "APIs" menu option
+11. Search for 'Google+' under 'Browse APIs'. Toggle status for the 'Google+ API' option; this should enable it and include in your list of enabled APIs.
+
+##Starting the project
+
+Download (or fork & clone) this project into your local environment. Add it to your source control if you are planning on making changes.
+
+Once you have satisfied the above requirements, just run one command:
 
     vagrant up
 
-This will take a while to download the base image and all of the many dependencies. Once it has finished, you will have the software running in a set of VMs. You can now access your local server at [https://localhost:18443/openidmui/](https://localhost:8443/openidmui/) and [https://localhost:18443/admin/](https://localhost:8443/admin/). Until you start customizing the project, all you will have is the stock OpenIDM project, with the only difference being that it is configured to use PostgreSQL as the repository. The PostgreSQL database server is running in a separate VM (called 'postgresql93'). Both of these VM images are Ubuntu 'Precise' (12.04.5) 32-bit servers.
+This will take a while to download the base image and all of the many dependencies. Once it has finished, you will have the software running in a set of VMs. You can now access your local server at [https://localhost:18443/openidmui/](https://localhost:8443/openidmui/) and [https://localhost:18443/admin/](https://localhost:8443/admin/). You will also have an OpenDJ 2.6.0 server running on localhost port 1389 (admin port 4444 and jmx port 1689).
 
-When the vagrant environment is first created, [Maven](http://maven.apache.org/) is used within your 'idm' vm to compile all of the project source (under src/main/resources) and the dependencies into the target/openidm_project folder. After that finishes, OpenIDM is registered as a service and then started. Finally, [Grunt](http://gruntjs.com/) is used to monitor changes to the source code and automatically deploy that to the target/openidm_project folder.
-
-At this point, whatever specific customizations that exist for your project will be deployed and ready to use. Whoever else has access to your project source code should be able to bring online the complete environment with just that one command. If no further development is needed, then the system is ready to use as it is when it starts up.
-
-##Project Development
-
-Nearly all of the files included in this boilerplate are likely candidates for changes. It is my hope that what is provided is a reasonable default for most starting points, but it is worth looking through each folder and seeing what files are already there. I have included READMEs in each folder as well, with a brief explanation about what you might want to do with each of the provided files and folders. I have also added a fair amount of comments in each file, where I think it is most likely that you will need to change them. I highly suggest looking through each file that I am including.
-
-There are several files within this root folder that you should be aware of:
-
-###Vagrantfile
-This file is used by [Vagrant](http://www.vagrantup.com/) to define all of the virtual machines you want to use to run your project. Given that this project is designed to facilitate development of a project, I highly recommend using these virtual machines as targets for your whole environment (not just for OpenIDM itself but also all of the remote resources you expect to connect to). If this is feasible, having your whole environment defined with vagrant will be very advantageous as it allows anyone who checks out your project to have an identical, independent copy of what you used during your development. Setting this up means adding new virtual machine entries within Vagrantfile, along with the necessary provisioner configuration (shell scripts, Chef / Puppet configurations, etc...) to get the server in a usable state.
-
-###pom.xml
-This file is used by [Maven](http://maven.apache.org/) within the 'idm' machine. It instructs Maven to pull together the OpenIDM core, any external dependencies you need (JDBC drivers, libraries, etc...) and your project source into a single folder (target/openidm_project). Note that Maven is only executed when the idm machine is first created. If you need to make changes to pom.xml, you will probably need to login to the virtual machine and re-execute maven, manually. For example:
-
-    vagrant ssh idm
-    cd /vagrant
-    mvn clean install
-
-I recommend getting pretty familiar with this process. It often seems to be helpful to operate within the VM running OpenIDM, for troubleshooting / restarting / rebuilding etc...
-
-###Gruntfile.js and package.json
-These files configure [Grunt](http://gruntjs.com/), which runs in the background of the 'idm' VM. Grunt is helpful for many things, but by default I have only configured it to automatically deploy changes from your src/main/resources working copy into your target/openidm_project build environment. This may be all you need, however sometimes more complex build processes may be needed (Javascript minification for the UI, for example). Edit these two files in the normal way to customize the build process however you need.
+When you load [https://localhost:18443/openidmui/](https://localhost:8443/openidmui/), you should see a new button to 'Sign in with Google'. Clicking on this should take users to the Google login and consent pages. Assuming they approve access, they will be redirected back to your sample. At that point, they will be provisioned into managed/user and synced to OpenDJ (this will be transparent to the user). They will then be sent to the normal OpenIDM UI, logged in as their newly-created user.
 
 
+##Major areas of development for this project
+
+This project was started using the [OpenIDM Custom Project Boilerplate](https://github.com/jakefeasel/openidm-boilerplate). The additions that I have made include:
+
+* Adding in a new virtual machine for hosting OpenDJ 2.6.0 - see details within vagrant\_scripts/dj\_bootstrap.sh
+* UI customizations - various files under src/main/resources/ui/default/enduser/public, main ones under org/forgerock/openidm/ui/custom
+* A new endpoint to assist with obtaining an OpenID Connect token and fetching the user details to insert into managed/user
+* Configuration for OpenID Connect authentication, ldap connection and sync all within src/main/resources/config
