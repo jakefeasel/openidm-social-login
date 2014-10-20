@@ -3,6 +3,7 @@
 export OPENIDM_OPTS="-Xms128m -Xmx256m"
 
 echo "192.168.50.4 OPENIDM_REPO_HOST" >> /etc/hosts
+echo "192.168.50.5 DJ_HOST" >> /etc/hosts
 
 echo "export OPENIDM_OPTS=\"${OPENIDM_OPTS}\"" >> /etc/profile
 
