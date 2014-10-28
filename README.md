@@ -53,7 +53,7 @@ Once you have satisfied the above requirements, just run one command:
 
     vagrant up
 
-This will take a while to download the base image and all of the many dependencies. Once it has finished, you will have the software running in a set of VMs. You can now access your local server at [https://localhost:18443/openidmui/](https://localhost:8443/openidmui/) and [https://localhost:18443/admin/](https://localhost:8443/admin/). You will also have an OpenDJ 2.6.0 server running on localhost port 1389 (admin port 4444 and jmx port 1689).
+This will take a while to download the base image and all of the many dependencies. Once it has finished, you will have the software running in a set of VMs. You can now access your local server at [https://localhost:18443/openidmui/](https://localhost:18443/openidmui/) and [https://localhost:18443/admin/](https://localhost:18443/admin/). You will also have an OpenDJ 2.6.0 server running on localhost port 1389 (admin port 4444 and jmx port 1689).
 
 When you load [https://localhost:18443/openidmui/](https://localhost:8443/openidmui/), you should see a new button to 'Sign in with Google'. Clicking on this should take users to the Google login and consent pages. Assuming they approve access, they will be redirected back to your sample. At that point, they will be provisioned into managed/user and synced to OpenDJ (this will be transparent to the user). They will then be sent to the normal OpenIDM UI, logged in as their newly-created user.
 
