@@ -4,6 +4,16 @@
             "name" : "systemLdapAccounts_managedUser",
             "source" : "system/ldap/account",
             "target" : "managed/user",
+            "correlationQuery" : {
+                "type" : "text/javascript",
+                "expressionTree" : {
+                    "any" : [
+                        "userName"
+                    ]
+                },
+                "mapping" : "systemLdapAccounts_managedUser",
+                "file" : "ui/correlateTreeToQueryFilter.js"
+            },
             "properties" : [
                 {
                     "source" : "cn",
@@ -73,6 +83,16 @@
             "name" : "managedUser_systemLdapAccounts",
             "source" : "managed/user",
             "target" : "system/ldap/account",
+            "correlationQuery" : {
+                "type" : "text/javascript",
+                "expressionTree" : {
+                    "any" : [
+                        "uid"
+                    ]
+                },
+                "mapping" : "managedUser_systemLdapAccounts",
+                "file" : "ui/correlateTreeToQueryFilter.js"
+            },
             "links" : "systemLdapAccounts_managedUser",
             "onCreate" : {
                 "type" : "text/javascript",
