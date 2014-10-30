@@ -1,7 +1,7 @@
 
-## Uncomment the following lines to install Oracle JDK instead of openjdk
-#apt-get --yes update
+apt-get --yes update
 
+## Uncomment the following lines to install Oracle JDK instead of openjdk
 #apt-get --yes --force-yes install python-software-properties
 #add-apt-repository --yes ppa:webupd8team/java
 #add-apt-repository --yes ppa:chris-lea/node.js
