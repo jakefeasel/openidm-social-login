@@ -1,9 +1,10 @@
 /*global define */
 
 define("org/forgerock/openidm/ui/custom/LoginView", [
+    "underscore",
     "./OpenIDConnectDelegate",
     "org/forgerock/openidm/ui/user/LoginView"
-], function(oidcDelegate, idmLoginView) {
+], function(_, oidcDelegate, idmLoginView) {
     
     var LoginView = function () {},
         obj;

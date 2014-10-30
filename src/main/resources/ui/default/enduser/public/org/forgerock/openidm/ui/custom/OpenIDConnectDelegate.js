@@ -1,9 +1,10 @@
 /*global $, define, _, localStorage */
 
 define("org/forgerock/openidm/ui/custom/OpenIDConnectDelegate", [
+    "underscore",
     "org/forgerock/commons/ui/common/util/Constants",
     "org/forgerock/commons/ui/common/main/AbstractDelegate"
-], function(constants, AbstractDelegate) {
+], function(_, constants, AbstractDelegate) {
 
     var obj = new AbstractDelegate(constants.host + "/openidm/endpoint/oidc"),
         getURLParams = function () {
