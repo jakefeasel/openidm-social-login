@@ -3,14 +3,14 @@
 define("org/forgerock/openidm/ui/custom/LoginView", [
     "underscore",
     "./OpenIDConnectDelegate",
-    "org/forgerock/openidm/ui/user/LoginView"
+    "org/forgerock/openidm/ui/LoginView"
 ], function(_, oidcDelegate, idmLoginView) {
-    
+
     var LoginView = function () {},
         obj;
 
     LoginView.prototype = idmLoginView;
-    
+
     obj = new LoginView();
 
     obj.template = "templates/custom/LoginTemplate.html";
@@ -38,8 +38,6 @@ define("org/forgerock/openidm/ui/custom/LoginView", [
                                 '&client_id=' + provider.client_id;
 
     }, obj);
-    
+
     return obj;
 });
-
-

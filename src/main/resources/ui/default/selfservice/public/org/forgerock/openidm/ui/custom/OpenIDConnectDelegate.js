@@ -1,4 +1,4 @@
-/*global $, define, _, localStorage */
+/*global define, localStorage */
 
 define("org/forgerock/openidm/ui/custom/OpenIDConnectDelegate", [
     "underscore",
@@ -9,20 +9,20 @@ define("org/forgerock/openidm/ui/custom/OpenIDConnectDelegate", [
     var obj = new AbstractDelegate(constants.host + "/openidm/endpoint/oidc"),
         getURLParams = function () {
             return _.chain( window.location.search.replace(/^\?/, '').split("&") )
-                .map(function (arg) { 
-                    return arg.split("="); 
+                .map(function (arg) {
+                    return arg.split("=");
                 })
                 .object()
                 .value();
         };
 
     obj.getMainUri = function () {
-        return  window.location.protocol + "//" + window.location.host + 
+        return  window.location.protocol + "//" + window.location.host +
                 window.location.pathname.replace(/(\/oauth\.html)|(\/$)/, '/index.html');
     };
 
     obj.getRedirectUri = function () {
-        return  window.location.protocol + "//" + window.location.host + 
+        return  window.location.protocol + "//" + window.location.host +
                 window.location.pathname.replace(/(\/index\.html)|(\/$)/, '/oauth.html');
     };
 
@@ -63,6 +63,3 @@ define("org/forgerock/openidm/ui/custom/OpenIDConnectDelegate", [
 
     return obj;
 });
-
-
-

@@ -3,7 +3,7 @@ OpenIDM Sample for Social Login with OpenID Connect
 
 This is a sample project demonstrating the use of OpenID Connect within OpenIDM. It presents a single visible enhancment to the default OpenIDM project - a new button on the /openidmui login page that allows the user to login with Google in addition to the more traditional username and password. Once logged in, the user will be automatically created in the local managed/user table; a matching record will then be created (via the normal sync process) in an LDAP server.
 
-This project will start up three small virtual machines - one for PostgreSQL 9.3, one for OpenDJ 2.6.0, and one for OpenIDM 3.1 (which will be modified to include these customizations). 
+This project will start up three small virtual machines - one for PostgreSQL 9.3, one for OpenDJ 2.6.0, and one for OpenIDM 3.1 (which will be modified to include these customizations).
 
 This project was created using the [OpenIDM Custom Project Boilerplate](https://github.com/jakefeasel/openidm-boilerplate).
 
@@ -25,7 +25,7 @@ Here are the instructions for setting up a new Project for use in this sample:
 
     'Authorized JavaScript Origins' = https://localhost:18443
 
-    'Authorized Redirect URI' = https://localhost:18443/openidmui/oauth.html
+    'Authorized Redirect URI' = https://localhost:18443/oauth.html
 
 7. Copy the values shown for "Client ID" and "Client Secret" into src/main/resources/conf/authentication.json, within this block (obviously replacing #your_client_id with the actual value, and same for client_secret):
 
@@ -34,9 +34,9 @@ Here are the instructions for setting up a new Project for use in this sample:
                             "icon" : "https://developers.google.com/accounts/images/sign-in-with-google.png",
                             "client_id" : "#your_client_id",
                             "client_secret" : "#your_client_secret",
-                            "authorization_endpoint" : "https://accounts.google.com/o/oauth2/auth",
-                            "token_endpoint" : "https://accounts.google.com/o/oauth2/token",
-                            "userinfo_endpoint" : "https://www.googleapis.com/plus/v1/people/me/openIdConnect",
+                            "authorization_endpoint" : "https://accounts.google.com/o/oauth2/v2/auth",
+                            "token_endpoint" : "https://www.googleapis.com/oauth2/v4/token",
+                            "userinfo_endpoint" : "https://www.googleapis.com/oauth2/v3/userinfo",
                             "well-known" : "https://accounts.google.com/.well-known/openid-configuration"
                         }
 
@@ -53,9 +53,9 @@ Once you have satisfied the above requirements, just run one command:
 
     vagrant up
 
-This will take a while to download the base image and all of the many dependencies. Once it has finished, you will have the software running in a set of VMs. You can now access your local server at [https://localhost:18443/openidmui/](https://localhost:18443/openidmui/) and [https://localhost:18443/admin/](https://localhost:18443/admin/). You will also have an OpenDJ 2.6.0 server running on localhost port 1389 (admin port 4444 and jmx port 1689).
+This will take a while to download the base image and all of the many dependencies. Once it has finished, you will have the software running in a set of VMs. You can now access your local server at [https://localhost:18443/openidmui/](https://localhost:18443/) and [https://localhost:18443/admin/](https://localhost:18443/admin/).
 
-When you load [https://localhost:18443/openidmui/](https://localhost:8443/openidmui/), you should see a new button to 'Sign in with Google'. Clicking on this should take users to the Google login and consent pages. Assuming they approve access, they will be redirected back to your sample. At that point, they will be provisioned into managed/user and synced to OpenDJ (this will be transparent to the user). They will then be sent to the normal OpenIDM UI, logged in as their newly-created user.
+When you load [https://localhost:18443/](https://localhost:8443/), you should see a new button to 'Sign in with Google'. Clicking on this should take users to the Google login and consent pages. Assuming they approve access, they will be redirected back to your sample. At that point, they will be provisioned into managed/user and synced to OpenDJ (this will be transparent to the user). They will then be sent to the normal OpenIDM UI, logged in as their newly-created user.
 
 
 ##Major areas of development for this project
